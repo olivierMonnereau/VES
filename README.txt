@@ -1,0 +1,1 @@
+The aim of this project is to develop a simple web application to compute Schlumberger Vertical Electrical Sounding (VES).
