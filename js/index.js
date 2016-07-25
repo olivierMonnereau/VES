@@ -116,8 +116,8 @@ formElt.addEventListener("submit", function(e) {
     for (var i = 1; i < inputElts.length - 1; i += 2) {
         thicknesses.push(parseFloat(inputElts[i].value));
     }
-    alert(resistivities);
-    alert(thicknesses);
+    var RT = resistivityTransform(resistivities, thicknesses);
+    alert(RT);
 });
 
 
