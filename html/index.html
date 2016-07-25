@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Schlumberger Vertical Electrical Sounding</title>
+    </head>
+    <body>
+        <header>
+            <h1>Schlumberger Vertical Electrical Sounding</h1>
+        </header>
+        
+        <section>
+            <canvas id="curveCanvas" width="300" height="300"></canvas>
+            <form>
+                <p>
+                    <label for="numberOfLayers">Number of layers:</label>
+                    <input type="number" name="numberOfLayers" id="numberOfLayers" min="2" max="6" step="1" value=2>
+                </p>
+                <p>
+                    <label>Layer 1:</label>
+                    
+                    <input type="text" name="layer1Resistivity" id="layer1Resistivity" required placeholder="Resistivity">
+                    <label for="layer1Resistivity">ohm.m</label>
+                    
+                    <input type="text" name="layer1Thickness" required placeholder="Thickness">
+                    <label for="layer1Thickness">m</label>
+                </p>
+                <p>
+                    <label>Layer 2:</label>
+                    
+                    <input type="text" name="layer2Resistivity" id="layer2Resistivity" required placeholder="Resistivity">
+                    <label for="layer2Resistivity">ohm.m</label>
+                </p>
+                <p>
+                    <input type="submit" value="Compute">
+                </p>
+            </form>
+        </section>
+    </body>
+</html>
