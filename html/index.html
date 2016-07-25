@@ -4,7 +4,8 @@
         <meta charset="utf-8">
         <title>Schlumberger Vertical Electrical Sounding</title>
     </head>
-    <body>
+    
+    <body onload="setup();">
         <header>
             <h1>Schlumberger Vertical Electrical Sounding</h1>
         </header>
@@ -14,27 +15,33 @@
             <form>
                 <p>
                     <label for="numberOfLayers">Number of layers:</label>
-                    <input type="number" name="numberOfLayers" id="numberOfLayers" min="2" max="6" step="1" value=2>
+                    <input type="number" name="numberOfLayers" id="numberOfLayers" min="2" max="6" step="1">
                 </p>
-                <p>
-                    <label>Layer 1:</label>
+                
+                <div id="layersDescription">
+                    <!--<p>
+                        <label>Layer 1:</label>
+                        
+                        <input type="text" name="Resistivity1" id="Resistivity1" required placeholder="Resistivity">
+                        <label for="Resistivity1">ohm.m</label>
                     
-                    <input type="text" name="layer1Resistivity" id="layer1Resistivity" required placeholder="Resistivity">
-                    <label for="layer1Resistivity">ohm.m</label>
+                        <input type="text" name="Thickness1" required placeholder="Thickness">
+                        <label for="Thickness1">m</label>
+                    </p>
+                    <p>
+                        <label>Layer 2:</label>
                     
-                    <input type="text" name="layer1Thickness" required placeholder="Thickness">
-                    <label for="layer1Thickness">m</label>
-                </p>
-                <p>
-                    <label>Layer 2:</label>
-                    
-                    <input type="text" name="layer2Resistivity" id="layer2Resistivity" required placeholder="Resistivity">
-                    <label for="layer2Resistivity">ohm.m</label>
-                </p>
+                        <input type="text" name="Resistivity2" id="Resistivity2" required placeholder="Resistivity">
+                        <label for="Resistivity2">ohm.m</label>
+                    </p>  -->         
+                </div>
+                
                 <p>
                     <input type="submit" value="Compute">
                 </p>
             </form>
         </section>
+        
+        <script src="../js/index.js"></script>
     </body>
 </html>
