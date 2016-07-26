@@ -3,12 +3,7 @@ var layersDescriptionElt = document.getElementById("layersDescription");
 
 
 function setup() {
-    var canvasElt = document.getElementById("curveCanvas");
-    if (canvasElt.getContext) {
-        var ctx = canvasElt.getContext('2d');
-        
-        ctx.strokeRect(0, 0, 300, 300);
-    }
+    drawCanvas();
     
     formElt.elements.numberOfLayers.value = 4;
     createLayersInputs();
@@ -19,8 +14,77 @@ function setup() {
     formElt.elements.resistivity3.value = "160";
     formElt.elements.thickness3.value = "40";
     formElt.elements.resistivity4.value = "3.5";
-    
-    alert(canvasElt.width);
+}
+
+var x0 = 80, y0 = 10;
+var width = 250, height = 250;
+
+function drawCanvas(OA, resistivities) {
+    var canvasElt = document.getElementById("curveCanvas");
+    if (canvasElt.getContext) {
+        var ctx = canvasElt.getContext('2d');
+        
+        ctx.clearRect(0, 0, 400, 300);
+        // Draw grid and axes of the graph
+        ctx.strokeStyle = 'rgb(0, 0, 0)';
+
+        for (var i = 1; i <= 10000; i *= 10) {
+            var point = getScreenCoordinates(i, i);
+                     
+            // Draw horizontal grid
+            ctx.beginPath();
+            ctx.moveTo(x0, point.y);
+            ctx.lineTo(x0 + width, point.y);
+            ctx.stroke();
+            
+            // Draw apparent resistivity ticks
+            ctx.fillStyle ='rgb(0, 0, 0)';
+            ctx.textAlign = "right";
+            ctx.font = "0.8em arial";
+            ctx.fillText(i, x0 - 5, point.y);
+              
+            // Draw vertical grid
+            ctx.beginPath();
+            ctx.moveTo(point.x, y0);
+            ctx.lineTo(point.x, y0 + height);
+            ctx.stroke();
+            
+            // Draw AB/2 ticks
+            ctx.fillText(i, point.x, y0 + height + 15);
+            
+            // Draw AB/2 title
+            ctx.textAlign = "center";
+            ctx.font = "0.8em arial";
+            ctx.fillText("AB/2 (m)", x0 + width / 2, y0 + height + 30);
+              
+            // Draw apparent resistivity title
+            ctx.textAlign = "left";
+            ctx.fillText("Rho", 0, y0 + height / 2 - 10);
+            ctx.fillText("(ohm.m)", 0, y0 + height /2 + 10)
+
+        }
+        
+        // Draw apparent resistivity curve
+        ctx.strokeStyle = 'rgb(255, 0, 0)';
+        ctx.beginPath();
+        if (OA !== undefined && resistivities !== undefined) {
+            var point = getScreenCoordinates(OA[0], resistivities[0]);
+            ctx.moveTo(point.x, point.y);
+            for (var i = 1; i < OA.length; i++) {
+                point = getScreenCoordinates(OA[i], resistivities[i]);
+                ctx.lineTo(point.x, point.y);
+            }
+        }
+        ctx.stroke();
+        ctx.closePath();
+    }   
+}
+
+function getScreenCoordinates(OA, resistivity) {
+    return {
+        x: x0 + (Math.log(OA) - Math.log(1)) * width / (Math.log(10000) - Math.log(1)),
+        y: y0 + height - (Math.log(resistivity) - Math.log(1)) * height / (Math.log(10000) - Math.log(1))
+    }
 }
 
 function createLayersInputs() {
@@ -119,16 +183,8 @@ formElt.addEventListener("submit", function(e) {
         thicknesses.push(parseFloat(inputElts[i].value));
     }
 
-    var data = getApparentResisityCurve(resistivities, thicknesses);
-    //alert(data.halfSpacing);
-    //alert(data.apparentResistivities);
-    
-    var canvasElt = document.getElementById("curveCanvas");
-    if (canvasElt.getContext) {
-        var ctx = canvasElt.getContext('2d');
-        
-        ctx.strokeRect(0, 0, 100, 100);
-    }
+    var data = getApparentResisityCurve(resistivities, thicknesses);    
+    drawCanvas(data.halfSpacing, data.apparentResistivities);
     
 });
 
