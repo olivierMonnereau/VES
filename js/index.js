@@ -1,6 +1,7 @@
 var formElt = document.querySelector("form");
 var layersDescriptionElt = document.getElementById("layersDescription");
 
+
 function setup() {
     var canvasElt = document.getElementById("curveCanvas");
     if (canvasElt.getContext) {
@@ -19,6 +20,7 @@ function setup() {
     formElt.elements.thickness3.value = "40";
     formElt.elements.resistivity4.value = "3.5";
     
+    alert(canvasElt.width);
 }
 
 function createLayersInputs() {
@@ -116,8 +118,18 @@ formElt.addEventListener("submit", function(e) {
     for (var i = 1; i < inputElts.length - 1; i += 2) {
         thicknesses.push(parseFloat(inputElts[i].value));
     }
-    var RT = resistivityTransform(resistivities, thicknesses);
-    alert(RT);
+
+    var data = getApparentResisityCurve(resistivities, thicknesses);
+    //alert(data.halfSpacing);
+    //alert(data.apparentResistivities);
+    
+    var canvasElt = document.getElementById("curveCanvas");
+    if (canvasElt.getContext) {
+        var ctx = canvasElt.getContext('2d');
+        
+        ctx.strokeRect(0, 0, 100, 100);
+    }
+    
 });
 
 

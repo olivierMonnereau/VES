@@ -1,12 +1,10 @@
-// Computation of resistivity transform adapted from Koefoed (1970) by Ghosh (1971)
-
 // Number of samples:
 var nSamples = 44;
 // AB/2 spacing:
 var OA = 
     [0.0139790406440197, 0.0205184256193513, 0.0301169300968417, 0.0442056079391693, 0.0648849589579011, 0.0952380952380952, 0.139790406440197, 0.205184256193513, 0.301169300968417, 0.442056079391693, 0.648849589579011, 0.952380952380952, 1.39790406440197, 2.05184256193513, 3.01169300968417, 4.42056079391693, 6.48849589579011, 9.52380952380952, 13.9790406440197, 20.5184256193513, 30.1169300968417, 44.2056079391693, 64.8849589579011, 95.2380952380952, 139.790406440197, 205.184256193513, 301.169300968417, 442.056079391693, 648.849589579011, 952.380952380952, 1397.90406440197, 2051.84256193513, 3011.69300968417, 4420.56079391693, 6488.49589579011, 9523.80952380952, 13979.0406440197, 20518.4256193513, 30116.9300968417, 44205.6079391693, 64884.9589579011, 95238.0952380952, 139790.406440197, 205184.256193513];
 
-
+// Computation of resistivity transform adapted from Koefoed (1970) by Ghosh (1971)
 function resistivityTransform(resistivities, thicknesses) {
     // Number of layers (basement include):
     var nLayers = resistivities.length;
@@ -29,5 +27,43 @@ function resistivityTransform(resistivities, thicknesses) {
         }
         RT[i] = T[index];
     }
+    
     return RT;
+}
+
+// Compute apparent resistivity curve using Ghosh's linear filter.
+// Ghosh, D.P., 1971, Inverse filter coefficients for the computation of apparent resistivity, Geophysical Prospecting 19, 769-775
+function ghoshFilter(resistivities, thicknesses) {
+    // Filter coefficients
+    var b = [0.0225,-0.0499,0.1064,0.1854,1.9720,-1.5716,0.4018,-0.0814,0.0148]
+    
+    // Compute resistivity transform
+    var RT = resistivityTransform(resistivities, thicknesses);
+    
+    // Compute apparent resistivities
+    var apparentResisitivies = [];
+    apparentResisitivies.length = nSamples;
+    for (var i = 10; i <= 37; i++) {
+        apparentResisitivies[i] = 0;
+        for (var j = -3; j <= 5; j++) {
+            apparentResisitivies[i] += b[j+3]*RT[i-j*2];
+        }
+    }
+    
+    return apparentResisitivies;
+}
+
+function getApparentResisityCurve(resistivities, thicknesses) {
+    
+    var appRes = ghoshFilter(resistivities, thicknesses);
+    
+    var apparentResistivities = [];
+    var halfSpacing = [];
+    
+    for (var i = 13; i <= 35; i++) {
+        apparentResistivities.push(appRes[i]);
+        halfSpacing.push(OA[i]);
+    }
+    
+    return {halfSpacing, apparentResistivities};
 }
